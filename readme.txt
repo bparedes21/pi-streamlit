@@ -1,3 +1,16 @@
+dashboard es main.py
+
+
+
+
+
+
+
+
+
+
+
+
 activate
 cd ..
 code .

@@ -14,11 +14,10 @@ import pandas as pd
 import requests
 from datetime import datetime
 import time
-def funcion_crearDF_por_año(año):
+def funcion_crearDF_por_año(año,base_currency):
     endpoint_url='https://ftx.com/api/markets'
-    base_currency = 'FTT'
-    quote_currency = 'USD'
-
+    
+    quote_currency= 'USD'
     request_url = f'{endpoint_url}/{base_currency}/{quote_currency}'
     import pandas as pd
     import requests
@@ -27,7 +26,7 @@ def funcion_crearDF_por_año(año):
     daily=str(60*60*24)
     #Obtengo los datos a partir de 2022
     start_date = datetime(año, 1, 1).timestamp()
-    st.write(start_date)
+    
     #Get para obtener los datos de la API en formato JSON
     # Get the historical market data as JSON
     historical = requests.get(
@@ -88,7 +87,7 @@ def funcion_obtener_price_coin_actual():
     lista_precio_actual=[]
     lista_conversion=[]
     precio_sin_media=[]
-    list_monedas=["LINK","MATIC","USDT","NEAR","XRP","DOT","DAI","SOL","DOGE"]
+    list_monedas=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
     
     for moneda in list_monedas:
         string_moneda=moneda+"/USD"
@@ -108,7 +107,7 @@ def funcion_obtener_price_coin_actual():
     col=["precio","moneda","precio_usd"]
     c = zip(lista_precio_actual,list_names,lista_conversion)
     df3=pd.DataFrame(c)
-    #data_ML_car.loc[data_ML_car['carwidth']]=df[
+   
     df3.columns=col    
     varianza_coin,desv_estd_coin=funcion_calcular_varianza(lista_precio_actual)
     varianza_coin=round(varianza_coin,2)
@@ -121,123 +120,181 @@ def funcion_obtener_price_coin_actual():
 df_stadistic,varianza_coin,desv_estd_coin,varianza_USD,desv_estd_USD=funcion_obtener_price_coin_actual()
 
 st.set_page_config(
-    page_title="Dashboard de FTX :",
+    page_title="Dashboard de FTX : ",
     page_icon="✅",
     layout="wide",
 )
 
-df_concat=funcion_crearDF_por_año(2019)
-df_concat['date'] = pd.to_datetime(df_concat['date'], format="%Y %m/%d")
-df_concat=df_concat.drop(columns=["año","mes","dia","open","high","low","close"])
-#df_concat=df_concat.reset_index(drop=True)
-#df_concat=df_concat.drop(columns="index")
-st.title("Dashboard de FTX")
-col1,col2,col3= st.columns([1,2,1])
 
+
+st.title("Dashboard de FTX")
+st.write(":sunglasses:")
+col1,col2,col3,col4= st.columns([1,1,1,1])
+column1,column2= st.columns([1,1])
+col_1,col_2= st.columns(2)
+
+#st.info('This is a purely informational message', icon="ℹ️")
 with st.sidebar:
-    list_menu=["Reporte de calidad y detalle de los datos","Ultimas 24hs","Datos historicos","Varianza, Volumen de transacción ","Calculadora","Media Móvil"]
+    list_menu=["Reporte de calidad y detalle de los datos","Volumen de transaccion para la moneda elegida","Varianza","Calculadora","Media Móvil"]
     opcion_elegida=st.sidebar.selectbox( "Menu",list_menu )
 
-    if(opcion_elegida=="Ultimas 24hs"):
-        st.subheader("Ultimas 24hs")
-        st.success("layout")
+    if(opcion_elegida=="Calculadora"):
+        
+        
         precio_lit=list(df_stadistic["precio"])
         datos_list=list(df_stadistic["moneda"])
         
-        import plotly.graph_objs as go
-        with col1:
-            
-            st.title("Ultimas 24hs")
-            fig = go.Figure(
-            go.Pie(
-            labels = datos_list,
-            values = precio_lit,
-            hoverinfo = "label+percent",
-            textinfo = "value"
-            ))
-            st.header("Pie chart")
-            st.plotly_chart(fig)
-    elif opcion_elegida=="Datos historicos": 
-        list_menu2=["Filtrar por Año","Filtrar por Año y Mes","Filtrar por Año, Mes y Dia"]
         
-        opcion_elegida2=st.sidebar.selectbox( "Menu",list_menu2 )  
-        if(opcion_elegida2=="Filtrar por Año"):
-            with col2:
-                max_year=df_concat['date'].dt.year.max()
-                min_year=df_concat['date'].dt.year.min()
-                max_year=int(max_year)
-                min_year=int(min_year)
+        with column1:
+            st.title("Obtener conversion :")
+            #st.subheader("Elegir Criptomoneda")
+            st.success(" ")
+            list_menu3=["Conversion de Criptomoneda/USD","USD/Criptomoneda"]
+            opcion_elegida2=st.sidebar.selectbox( "Menu elegir conversion ",list_menu3)
+            number = st.number_input('Insertar un monto')
+            st.subheader("Criptomoneda/USD")
+            List_menu2=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
+            opcion_elegida4=st.sidebar.selectbox( "Menu para elegir Criptomoneda",List_menu2)
+            
+            df_moneda_elegida=df_stadistic[df_stadistic["moneda"]==opcion_elegida4]
+            if(opcion_elegida2=="Conversion de Criptomoneda/USD"):
+                
+                USD_equivalencia=float(df_moneda_elegida["precio"].values)
+                
+                multiplicacion_monedas=number*USD_equivalencia
+                st.write(number,"Criptomonedas equivalen a ",multiplicacion_monedas," USD")
+            else:
+                coin_precio=float(df_moneda_elegida["precio"].values)
+                division_monedas=number/coin_precio
+                st.write(number,"USD equivalen a ",division_monedas," Criptomoneda")
+            with column2:   
+                import plotly.express as px
+                fig2 = px.bar(df_stadistic, x='moneda', y='precio',title="Precio en USD para cada Criptomoneda")
+                st.plotly_chart(fig2)
+                
+    elif (opcion_elegida=="Volumen de transaccion para la moneda elegida"): 
+        with st.sidebar:
+            
+            list_menu1=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
+            opcion_elegida1=st.sidebar.selectbox( "Menu para elegir Criptomoneda",list_menu1 )
+            st.subheader("Volumen de transacciones en UDS")
+            st.success("Grafico de linea")
+            df_concat=funcion_crearDF_por_año(2019,opcion_elegida1)
+            df_concat['date'] = pd.to_datetime(df_concat['date'], format="%Y %m/%d")
+            df_concat=df_concat.drop(columns=["año","mes","dia","open","high","low","close"])
+            max_year=df_concat['date'].dt.year.max()
+            min_year=df_concat['date'].dt.year.min()
+            max_year=int(max_year)
+            min_year=int(min_year)
+            with column1:
+                
                 year_slider = st.slider('Año precio historico:',min_year,  max_year, max_year)
                 datos_año=df_concat[df_concat['date'].dt.year==year_slider]
-                #df_reset_datos_mes=datos_año.reset_index()
-                #df_reset_datos_mes.duplicated(keep='first')
+                #
                 datos_año=datos_año.set_index('date', inplace = False)
-                
+            
                 import plotly_express as px
             
                 fig=px.line(datos_año, x = datos_año.index, y = datos_año.columns)
-                # Plot!
+            
                 st.plotly_chart(fig)
-                #sns.line_chart(datos_año, x = datos_año.index, y = datos_año.columns)
-                #st.line_chart(datos_año)
+                #st.write(start_date)
+    elif (opcion_elegida=="Varianza"):      
+        
+        with col_1:
+            st.success("La varianza de las ultimas 24 hs para las Criptomonedas es de:")   
+            col_1.metric(label="Varianza", value=varianza_coin, 
+             )
+            st.write("Esto quiere decir que la diferencia entre los precios de las distintas monedas será de: Criptomonedas ",varianza_coin)    
+        with col_1:
+            st.success("La varianza de las ultimas 24 hs en UDS es de:")   
+            col_1.metric(label="Varianza", value=varianza_USD,
+             )    
+            st.write("Esto quiere decir que la diferencia entre los precios de las distintas monedas será de: USD ",varianza_USD)
+    elif (opcion_elegida=="Media Móvil"):
+        import plotly.graph_objects as go
+        list_menu3=["LINK","MATIC","USDT","NEAR","XRP","DOT","DAI","SOL","DOGE"]
+        opcion_elegida3=st.sidebar.selectbox( "Menu para elegir Criptomoneda",list_menu3 )
+        df_concat1=funcion_crearDF_por_año(2022,opcion_elegida3)
+        df_concat1['date'] = pd.to_datetime(df_concat1['date'], format="%Y %m/%d")
+        mayor_mes=df_concat1["mes"].max()
+        df_mes=df_concat1[df_concat1["mes"]==mayor_mes]
+        mayor_dia=df_mes["dia"].max()
+        df_dia=df_mes[df_mes["dia"]==mayor_dia]
+        
 
-        elif (opcion_elegida2=="Filtrar por Año y Mes"): 
-            with col2:
-                max_year=df_concat['date'].dt.year.max()
-                min_year=df_concat['date'].dt.year.min()
-                max_year=int(max_year)
-                min_year=int(min_year)
-                year_slider = st.slider('Año precio historico:',min_year,  max_year, max_year)
-                datos_año=df_concat[df_concat['date'].dt.year==year_slider]
-                datos_año.duplicated(keep='first')
-                max_month=datos_año['date'].dt.month.max()
-                min_month=datos_año['date'].dt.month.min()
-                max_month=int(max_month)
-                min_month=int(min_month)
+        array_open=df_dia["open"].values
+        open=float(array_open[0])
 
-                    
-                month_slider = st.slider('Mes precio historico:',min_month,  max_month, max_month)
-                datos_mes=datos_año[datos_año['date'].dt.month==month_slider]
-                #df_reset_datos_mes=datos_mes.reset_index()
-                #df_reset_datos_mes.duplicated(keep='first')
-                datos_mes=datos_mes.set_index('date', inplace = False)
-                
-                import plotly_express as px
+        array_maximo=df_dia["high"].values
+        maximo=float(array_maximo[0])
+
+        array_minimo=df_dia["low"].values
+        minimo=float(array_minimo[0])
+
+        array_close=df_mes["close"].values
+        cierre=float(array_close[0])
+
+        with col1:
+    
+            st.subheader("Precio Medio")
+            st.write("Precio Medio (PM). Cociente entre el precio máximo y el precio mínimo dividido entre dos, esto es:")
+            #PM= (Máximo + Mínimo)/2
+            PM= (maximo + minimo)/2
+            #here x as height
+            st.write("PM =",maximo,"+",minimo,"/2")
+            st.write("El valor para Precio Medio (PM) es",PM)
+           
+            col1.metric(label="PM", value=PM
+             )
+        with col2:   
+            st.subheader("Precio Típico")
             
-                fig=px.line(datos_mes, x = datos_mes.index, y = datos_mes.columns)
-        else:  
-            with col2:
-                max_year=df_concat['date'].dt.year.max()
-                min_year=df_concat['date'].dt.year.min()
-                max_year=int(max_year)
-                min_year=int(min_year)
-
-                year_slider = st.slider('Año precio historico:',min_year,  max_year, max_year)
-                datos_año=df_concat[df_concat['date'].dt.year==year_slider]
-                datos_año.duplicated(keep='first')
-
-                max_month=datos_año['date'].dt.month.max()
-                min_month=datos_año['date'].dt.month.min()
-                max_month=int(max_month)
-                min_month=int(min_month)
-
-                month_slider = st.slider('Mes precio historico:',min_month,  max_month, max_month)
-                datos_mes=datos_año[datos_año['date'].dt.month==month_slider]
-
-                datos_mes.duplicated(keep='first')
-                max_da=datos_mes['date'].dt.day.max()
-                max_da=int(max_da)
-                min_da=datos_mes['date'].dt.day.min()
-                min_da=int(min_da)
-                
-                day_slider = st.slider('Dia precio historico:',min_da,  max_da, max_da)
-                datos_dia=datos_mes[datos_mes['date'].dt.day==day_slider]
+            st.write("Precio Típico (PT). Cociente entre el precio máximo, precio mínimo y el cierre, dividido entre 3:")
+            #PT= (Máximo + Mínimo + Cierre)/3
+            PT= (maximo + minimo+cierre)/3
+            #here x as height
+         
+            st.write("PT =",maximo,"+",minimo,"+",cierre,"/3")
+            st.write("El valor para Precio Típico (PT) es",PT)
             
-                datos_dia=datos_dia.set_index('date', inplace = False)
-                
-                import plotly_express as px
+            col2.metric(label="PT", value=PT,
+             )
+
+        with col3:
+            st.subheader("Precio Ponderado")
             
-                fig=px.line(datos_dia, x = datos_dia.index, y = datos_dia.columns)
+            st.write("Precio Ponderado (PP). Cociente entre el precio máximo, el precio mínimo, la apertura y el cierre, dividido entre 4:")
+            #PT= (Máximo + Mínimo + Cierre)/3
+            PP= (maximo + minimo+open+cierre)/4
+            #here x as height
+         
+            st.write("PP =",maximo,"+",minimo,"+",open,"+",cierre,"/4")
+            st.write("El valor para Precio Ponderado (PP) es",PP)
+            
+            col3.metric(label="PT", value=round(PP,2),
+             )
+    else:
+        with col_1: 
+            st.title("Breve descripcion de los datos")
+            st.markdown(
+                    "Para obtener los datos utilice 2 tipos de url"
+                    "Con una obtuve ultimos datos de 24hs utilizando el nombre de la criptomoneda"
+                    "**DESCRIPTION columnas y tipo de datos: "    
+                    "**price:Float"
+                        )
+            st.markdown(
+                    "Con una obtuve ultimos datos de 24hs utilizando el nombre de la criptomoneda"
+                    "**DESCRIPTION columnas y tipo de datos: "    
+                    "**open:Float ,"
+                    "**high:Float ,"
+                    "**low:Float ,"
+                    "**date:datetime ,"
+                    "Al poder utilizar los datos sin problemas puedo llegar a la conclusion de que tienen buena calidad"
+                    "Es decir no me encontre con registros faltantes, ni caracteres extraños"
+                        )   
+                
+           
+        
 
-            #df_stadistic,varianza_coin,desv_estd_coin,varianza_USD,desv_estd_USD
-
+                
