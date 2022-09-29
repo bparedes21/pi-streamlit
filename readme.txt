@@ -1,8 +1,8 @@
 >>>>>>Dashboard es app.py
 
+deploy url<<<<< https://bparedes21-pi-streamlit-app-pbj0qd.streamlitapp.com/
 
-
-
+>>>>>>>>>
 
 
 
