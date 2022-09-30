@@ -15,7 +15,7 @@ activate
 cd ..
 code .
 python -m streamlit run import_ccxt.py
-python -m streamlit run import_ccxt1.py
+python -m streamlit run app.py
 BTC-PERP
 
 La plataforma admite más de 300 criptomonedas, entre ellas BTC, ETH, SOL, LTC, XRP, DOGE.

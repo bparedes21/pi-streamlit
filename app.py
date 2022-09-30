@@ -2,31 +2,27 @@ from sys import implementation
 import streamlit as st
 import pandas as pd
 import numpy as np
-
-import ccxt
 from st_aggrid import AgGrid
-#print(ccxt.exchanges)
-#archivo=ccxt.exchanges
-#AgGrid(archivo)
-
-
 import pandas as pd
-import requests
-from datetime import datetime
-import time
+from PIL import Image
+# Esta funcion crea un df con las columnas "open",	"high",	"low",	"close","date"
+# Recibe como parametro un Año de inicio para el rango de tiempo para la consulta a los datos historicos
+# recibe el nombre de una criptomoneda 
+# Devuelve un df con los datos historicos desde el año que  de la crptomoneda 
 def funcion_crearDF_por_año(año,base_currency):
-    endpoint_url='https://ftx.com/api/markets'
-    
-    quote_currency= 'USD'
-    request_url = f'{endpoint_url}/{base_currency}/{quote_currency}'
+    #Librerias que va a utilizar la funcion
     import pandas as pd
     import requests
     from datetime import datetime
+     #variables con los datos necesarios para hacer el get
+    endpoint_url='https://ftx.com/api/markets'
+    quote_currency= 'USD'
+    request_url = f'{endpoint_url}/{base_currency}/{quote_currency}'
     # 1 day = 60 * 60 * 24 (60 segundos 1 (minuto) por 60 minutos(1 hora) por 24 (horas))
     daily=str(60*60*24)
-    #Obtengo los datos a partir de 2022
+    #Obtengo los datos a partir año
     start_date = datetime(año, 1, 1).timestamp()
-    
+
     #Get para obtener los datos de la API en formato JSON
     # Get the historical market data as JSON
     historical = requests.get(
@@ -46,12 +42,14 @@ def funcion_crearDF_por_año(año,base_currency):
     #dividir date en año, mes, dia. Redondear volume 
     df['año'] = pd.DatetimeIndex(df['date']).year
     df['mes'] = pd.DatetimeIndex(df['date']).month
-    df['dia'] = pd.DatetimeIndex(df['date']).day
-    
+    df['dia'] = pd.DatetimeIndex(df['date']).day    
     df['volume']=round(df['volume'],1)
     return df
-def funcion_calcular_varianza(li):
 
+#Esta funcion calcula la varianza del precio de la cryptomoneda
+#
+#
+def funcion_calcular_varianza(li):
   suma=0
   for i in li:
     suma=suma+i
@@ -78,23 +76,20 @@ def funcion_obtener_price_coin_actual():
     import pandas as pd
     import requests
     import numpy as np
-   
     markets = requests.get('https://ftx.com/api/markets').json()
-    keys_ñl=markets.keys()
+    #keys_ñl=markets.keys()
     df = pd.DataFrame(markets['result'])
     df.set_index('name', inplace = False)
     list_names=[]
     lista_precio_actual=[]
     lista_conversion=[]
-    precio_sin_media=[]
+    
     list_monedas=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
     
     for moneda in list_monedas:
         string_moneda=moneda+"/USD"
         #print(string_moneda)
         btc_df=df[df["name"]==string_moneda]
-        #st.write("I'm ", btc_df, 'years old')
-        #btc_df["price"]=btc_df["price"].astype('float')
         price_val=btc_df['price']
         price_val=round(float(btc_df['price']),2)
         #print(price_val)
@@ -123,21 +118,27 @@ st.set_page_config(
     page_title="Dashboard de FTX : ",
     page_icon="✅",
     layout="wide",
+    
 )
 
 
 
-st.title("Dashboard de FTX")
-st.write(":sunglasses:")
+st.title("Dashboard de DEMO")
+st.write(":eyeglasses: Invierno digital")
+
 col1,col2,col3,col4= st.columns([1,1,1,1])
 column1,column2= st.columns([1,1])
 col_1,col_2= st.columns(2)
 
-#st.info('This is a purely informational message', icon="ℹ️")
+
+image = Image.open('invierno.jpg')
+
+
 with st.sidebar:
     list_menu=["Reporte de calidad y detalle de los datos","Volumen de transaccion para la moneda elegida","Varianza","Calculadora","Media Móvil"]
     opcion_elegida=st.sidebar.selectbox( "Menu",list_menu )
-
+    st.image(image, caption='Invierno Digital')
+    #st.info('This is a purely informational message', icon="ℹ️")    
     if(opcion_elegida=="Calculadora"):
         
         
@@ -146,7 +147,7 @@ with st.sidebar:
         
         
         with column1:
-            st.title("Obtener conversion :")
+            st.title("conversion :")
             #st.subheader("Elegir Criptomoneda")
             st.success(" ")
             list_menu3=["Conversion de Criptomoneda/USD","USD/Criptomoneda"]
@@ -238,11 +239,13 @@ with st.sidebar:
         with col1:
     
             st.subheader("Precio Medio")
-            st.write("Precio Medio (PM). Cociente entre el precio máximo y el precio mínimo dividido entre dos, esto es:")
+            st.write("Precio Medio (PM).")
+            st.write("Cociente entre el precio máximo ")
+            st.write("y el precio mínimo dividido entre dos, esto es:" )
             #PM= (Máximo + Mínimo)/2
             PM= (maximo + minimo)/2
             #here x as height
-            st.write("PM =",maximo,"+",minimo,"/2")
+            st.write("PM =",maximo,":heavy_plus_sign:",minimo,"/2")
             st.write("El valor para Precio Medio (PM) es",PM)
            
             col1.metric(label="PM", value=PM
@@ -250,33 +253,37 @@ with st.sidebar:
         with col2:   
             st.subheader("Precio Típico")
             
-            st.write("Precio Típico (PT). Cociente entre el precio máximo, precio mínimo y el cierre, dividido entre 3:")
+            st.write("Precio Típico (PT). ")
+            st.write("Cociente entre el precio máximo,")
+            st.write("precio mínimo y el cierre, dividido entre 3:")
             #PT= (Máximo + Mínimo + Cierre)/3
             PT= (maximo + minimo+cierre)/3
             #here x as height
          
-            st.write("PT =",maximo,"+",minimo,"+",cierre,"/3")
-            st.write("El valor para Precio Típico (PT) es",PT)
+            st.write("PT =",maximo,":heavy_plus_sign:",minimo,":heavy_plus_sign:",cierre,":heavy_division_sign:3")
             
-            col2.metric(label="PT", value=PT,
-             )
+            st.write("El valor para Precio Típico (PT) es",round(PT,2))
+            
+            col2.metric(label="PT", value=PT)
 
         with col3:
             st.subheader("Precio Ponderado")
             
-            st.write("Precio Ponderado (PP). Cociente entre el precio máximo, el precio mínimo, la apertura y el cierre, dividido entre 4:")
+            st.write("Precio Ponderado (PP). Cociente entre el precio máximo, ")
+            st.write("el precio mínimo, la apertura ")
+            st.write("y el cierre, dividido entre 4:")
             #PT= (Máximo + Mínimo + Cierre)/3
             PP= (maximo + minimo+open+cierre)/4
             #here x as height
          
-            st.write("PP =",maximo,"+",minimo,"+",open,"+",cierre,"/4")
-            st.write("El valor para Precio Ponderado (PP) es",PP)
+            st.write("PP =",maximo,":heavy_plus_sign:",minimo,":heavy_plus_sign:",open,":heavy_plus_sign:",cierre,":heavy_division_sign:4")
+            st.write("El valor para Precio Ponderado (PP) es",round(PP,4))
             
-            col3.metric(label="PT", value=round(PP,2),
+            col3.metric(label="PP", value=round(PP,4),
              )
     else:
         with col_1: 
-            st.title("Breve descripcion de los datos")
+            st.title("Breve descripcion de los datos :coffee:")
             st.markdown(
                     "Para obtener los datos utilice 2 tipos de url"
                     "Con una obtuve ultimos datos de 24hs utilizando el nombre de la criptomoneda"

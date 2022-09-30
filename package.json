@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "streamlit-component-lib": "^1.4.0"
+  }
+}
