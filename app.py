@@ -145,7 +145,7 @@ with st.sidebar:
         
         
         with column1:
-            st.title("Conversion :")
+            st.title("Conversion 💵:")
             #st.subheader("Elegir Criptomoneda")
             st.success(" ")
             list_menu3=["Conversion de Criptomoneda/USD","USD/Criptomoneda"]
@@ -186,7 +186,7 @@ with st.sidebar:
         with st.sidebar:
             
             st.subheader("Volumen de transacciones en UDS")
-            st.success("Grafico de linea")
+            st.success("Grafico de linea 📊")
             df_concat=funcion_crearDF_por_año(2019,opcion_elegida1)
             df_concat['date'] = pd.to_datetime(df_concat['date'], format="%Y %m/%d")
             df_concat=df_concat.drop(columns=["año","mes","dia","volume","high","low","close"])
@@ -215,7 +215,7 @@ with st.sidebar:
             
             
             st.subheader("Volumen de transacciones en UDS")
-            st.success("Grafico de linea")
+            st.success("Grafico de linea 📈 📉")
             df_concat=funcion_crearDF_por_año(2019,opcion_elegida1)
             df_concat['date'] = pd.to_datetime(df_concat['date'], format="%Y %m/%d")
             df_concat=df_concat.drop(columns=["año","mes","dia","open","high","low","close"])
@@ -320,7 +320,7 @@ with st.sidebar:
              )
     else:
         with col_1: 
-            st.title("Breve descripcion de los datos :coffee:")
+            st.title("Breve descripcion de los datos ☕️")
             st.markdown(
                     "Para obtener los datos utilice 2 tipos de url"
                     "Con una obtuve ultimos datos de 24hs utilizando el nombre de la criptomoneda"
