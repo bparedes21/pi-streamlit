@@ -131,13 +131,11 @@ column1,column2= st.columns([1,1])
 col_1,col_2= st.columns(2)
 
 
-image = Image.open('invierno.jpg')
-
-
 with st.sidebar:
-    list_menu=["Reporte de calidad y detalle de los datos","Volumen de transaccion para la moneda elegida","Varianza","Calculadora","Media Móvil"]
-    opcion_elegida=st.sidebar.selectbox( "Menu",list_menu )
-    st.image(image, caption='Invierno Digital')
+    list_menu=["Presentacion","Data analytics","Reporte de calidad y detalle de los datos","Historico de precios","Volumen de transaccion para la moneda elegida","Varianza","Calculadora","Media Móvil"]
+    default_ix="Presentacion"
+    opcion_elegida=st.sidebar.selectbox( "Menu",list_menu ,index=0)
+    
     #st.info('This is a purely informational message', icon="ℹ️")    
     if(opcion_elegida=="Calculadora"):
         
@@ -147,7 +145,7 @@ with st.sidebar:
         
         
         with column1:
-            st.title("conversion :")
+            st.title("Conversion :")
             #st.subheader("Elegir Criptomoneda")
             st.success(" ")
             list_menu3=["Conversion de Criptomoneda/USD","USD/Criptomoneda"]
@@ -172,12 +170,50 @@ with st.sidebar:
                 import plotly.express as px
                 fig2 = px.bar(df_stadistic, x='moneda', y='precio',title="Precio en USD para cada Criptomoneda")
                 st.plotly_chart(fig2)
-                
-    elif (opcion_elegida=="Volumen de transaccion para la moneda elegida"): 
+    elif (opcion_elegida=="Data analytics"): 
+        with column1:
+            image = Image.open('invierno.jpg')
+            st.image(image, caption='Invierno Digital ❄️')
+    elif (opcion_elegida=="Presentacion"): 
+        with column1:
+            st.write("Mi nombre es Brian Paredes. Vivo en argentina")
+            image = Image.open('bandera.jpg')
+            st.image(image, caption='Argentina 💰')
+            
+    elif (opcion_elegida=="Historico de precios"): 
+        list_menu1=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
+        opcion_elegida1=st.sidebar.selectbox( "Menu para elegir Criptomoneda",list_menu1 )
         with st.sidebar:
             
-            list_menu1=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
-            opcion_elegida1=st.sidebar.selectbox( "Menu para elegir Criptomoneda",list_menu1 )
+            st.subheader("Volumen de transacciones en UDS")
+            st.success("Grafico de linea")
+            df_concat=funcion_crearDF_por_año(2019,opcion_elegida1)
+            df_concat['date'] = pd.to_datetime(df_concat['date'], format="%Y %m/%d")
+            df_concat=df_concat.drop(columns=["año","mes","dia","volume","high","low","close"])
+            max_year=df_concat['date'].dt.year.max()
+            min_year=df_concat['date'].dt.year.min()
+            max_year=int(max_year)
+            min_year=int(min_year)
+            with column1:
+                
+                year_slider = st.slider('Precio historico de apertura:',min_year,  max_year, max_year)
+                datos_año=df_concat[df_concat['date'].dt.year==year_slider]
+                #
+                datos_año=datos_año.set_index('date', inplace = False)
+            
+                import plotly_express as px
+            
+                fig=px.line(datos_año, x = datos_año.index, y = datos_año.columns)
+            
+                st.plotly_chart(fig)
+                #st.write(start_date)            
+    elif (opcion_elegida=="Volumen de transaccion para la moneda elegida"): 
+        list_menu1=["LINK","MATIC","USDT","SRM","XRP","DOT","DAI","SOL","DOGE"]
+        opcion_elegida1=st.sidebar.selectbox( "Menu para elegir Criptomoneda",list_menu1 )
+        
+        with st.sidebar:
+            
+            
             st.subheader("Volumen de transacciones en UDS")
             st.success("Grafico de linea")
             df_concat=funcion_crearDF_por_año(2019,opcion_elegida1)
@@ -189,7 +225,7 @@ with st.sidebar:
             min_year=int(min_year)
             with column1:
                 
-                year_slider = st.slider('Año precio historico:',min_year,  max_year, max_year)
+                year_slider = st.slider('Precio historico por volumen de transacciones:',min_year,  max_year, max_year)
                 datos_año=df_concat[df_concat['date'].dt.year==year_slider]
                 #
                 datos_año=datos_año.set_index('date', inplace = False)
@@ -222,8 +258,9 @@ with st.sidebar:
         df_mes=df_concat1[df_concat1["mes"]==mayor_mes]
         mayor_dia=df_mes["dia"].max()
         df_dia=df_mes[df_mes["dia"]==mayor_dia]
-        
-
+        numero_de_meses=df_concat1["mes"].unique()
+        st.write("Meses: ", list(numero_de_meses))      
+ 
         array_open=df_dia["open"].values
         open=float(array_open[0])
 
@@ -291,11 +328,12 @@ with st.sidebar:
                     "**price:Float"
                         )
             st.markdown(
-                    "Con una obtuve ultimos datos de 24hs utilizando el nombre de la criptomoneda"
+                    "Con una obtuve ultimos historicos desde  utilizando el nombre de la criptomoneda"
                     "**DESCRIPTION columnas y tipo de datos: "    
                     "**open:Float ,"
                     "**high:Float ,"
                     "**low:Float ,"
+                    "**volume:Float ,"
                     "**date:datetime ,"
                     "Al poder utilizar los datos sin problemas puedo llegar a la conclusion de que tienen buena calidad"
                     "Es decir no me encontre con registros faltantes, ni caracteres extraños"
