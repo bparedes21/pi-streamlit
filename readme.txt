@@ -1,6 +1,6 @@
 >>>>>>Dashboard es app.py
 
-deploy url<<<<< https://bparedes21-pi-streamlit-app-4ocojb.streamlitapp.com/
+deploy url<<<<< https://bparedes21-pi-streamlit-app-e4pevb.streamlitapp.com/
 
 >>>>>>>>>
 
