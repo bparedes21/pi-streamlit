@@ -174,9 +174,15 @@ with st.sidebar:
         with column1:
             image = Image.open('invierno.jpg')
             st.image(image, caption='Invierno Digital ❄️')
+            st.subheader("🎬 Video demostracion 📽️")
+            video_file = open('analitycs.mp4', 'rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
+
+
     elif (opcion_elegida=="Presentacion"): 
         with column1:
-            st.write("Mi nombre es Brian Paredes. Vivo en argentina")
+            st.write("👋🏻 Mi nombre es Brian Paredes.🌎 Vivo en argentina")
             image = Image.open('bandera.jpg')
             st.image(image, caption='Argentina 💰')
             
