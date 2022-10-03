@@ -282,7 +282,7 @@ with st.sidebar:
             #PM= (Máximo + Mínimo)/2
             PM= (maximo + minimo)/2
             #here x as height
-            st.write("PM =",maximo,":heavy_plus_sign:",minimo,"/2")
+            st.write("PM =",maximo,":heavy_plus_sign:",minimo,":heavy_division_sign:2")
             st.write("El valor para Precio Medio (PM) es",PM)
            
             col1.metric(label="PM", value=PM
