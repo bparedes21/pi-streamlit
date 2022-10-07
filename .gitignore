@@ -1,8 +1,8 @@
-Lib/site-packages/
-Scripts/
-node_modules/
-share/
-etc/
+/Lib/site-packages/
+/Scripts/
+/node_modules/
+/share/
+/etc/
 *.o
 *.pyc 
 *.class
@@ -11,3 +11,4 @@ etc/
 *.lock
 *.tmp
 *.log".env" 
+.env
