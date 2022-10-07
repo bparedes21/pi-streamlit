@@ -1,7 +1,7 @@
-Lib/
+Lib/site-packages/
 Scripts/
 node_modules/
-
+share/
 etc/
 *.o
 *.pyc 
