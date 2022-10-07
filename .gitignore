@@ -10,4 +10,4 @@ etc/
 *.log
 *.lock
 *.tmp
-*.log
+*.log".env" 
