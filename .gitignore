@@ -6,7 +6,7 @@ etc/
 *.o
 *.pyc 
 *.class
-
+pi 03.ipynb
 *.log
 *.lock
 *.tmp
