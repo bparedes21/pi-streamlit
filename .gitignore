@@ -1,5 +1,12 @@
-script
-share
-etc
-Lib
-node_modules
+/node_modules
+/packages
+.o
+.pyc 
+.class
+/bin
+/out 
+/target
+.log
+.lock
+.tmp
+*.log
