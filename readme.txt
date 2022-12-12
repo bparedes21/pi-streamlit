@@ -1,6 +1,10 @@
 >>>>>>Dashboard es app.py
 
-deploy url<<<<< https://bparedes21-pi-streamlit-app-e4pevb.streamlitapp.com/
+************************ VER DEPLOY 
+
+https://youtu.be/-E3WnOAnml0
+
+************************
 
 >>>>>>>>> DETALLES
 Obtener datos de FTX 
@@ -12,6 +16,7 @@ La empresa está constituida en Antigua y Barbuda, con sede en las Bahamas.
 https://es.investing.com/crypto/ftx-token/historical-data
 >>>>>
 
+Obtener datos de FTX 
 Pensar en un cliente objetivo.
-Armar un plan para el cliente (elegir diferentes criptomonedas)
-Proponer una solucion.
+Armar un plan para el cliente: elegir diferentes criptomonedas.
+Proponer una solución: Armar un dashboard y hacer un storytelling
