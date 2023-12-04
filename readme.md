@@ -1,3 +1,4 @@
+readme.txt
 >>>>>>Dashboard es app.py
 
 ************************ VER DEPLOY 
