@@ -1,23 +1,33 @@
-readme.txt
->>>>>>Dashboard es app.py
+# FTX Dashboard - app.py
 
-************************ VER DEPLOY 
+## VISUALIZAR EL DESPLIEGUE
 
-https://youtu.be/-E3WnOAnml0
+[Demostración en YouTube](https://youtu.be/-E3WnOAnml0)
 
-************************
+---
 
->>>>>>>>> DETALLES
-Obtener datos de FTX 
+### DETALLES
 
-La plataforma admite más de 300 criptomonedas, entre ellas BTC, ETH, SOL, LTC, XRP, DOGE.
+#### Obtención de Datos de FTX
 
-La empresa está constituida en Antigua y Barbuda, con sede en las Bahamas.
+La plataforma FTX admite más de 300 criptomonedas, incluyendo BTC, ETH, SOL, LTC, XRP y DOGE.
 
-https://es.investing.com/crypto/ftx-token/historical-data
->>>>>
+La empresa tiene su sede en Antigua y Barbuda, con operaciones centrales en las Bahamas.
 
-Obtener datos de FTX 
-Pensar en un cliente objetivo.
-Armar un plan para el cliente: elegir diferentes criptomonedas.
-Proponer una solución: Armar un dashboard y hacer un storytelling
+[Datos Históricos de FTX en Investing.com](https://es.investing.com/crypto/ftx-token/historical-data)
+
+---
+
+#### Instrucciones
+
+1. **Obtención de Datos de FTX:** Se ha integrado un sistema para recopilar datos en tiempo real desde FTX.
+   
+2. **Definición del Cliente Objetivo:** Identifica el tipo de usuario al que se dirige el dashboard.
+
+3. **Planificación para el Cliente:** Selecciona diferentes criptomonedas relevantes para el cliente.
+
+4. **Solución Propuesta:** Desarrolla un dashboard interactivo y realiza un storytelling efectivo basado en los datos recopilados.
+
+---
+
+¡Bienvenido al FTX Dashboard! 🚀
